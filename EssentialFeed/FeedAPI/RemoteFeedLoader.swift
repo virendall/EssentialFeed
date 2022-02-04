@@ -7,7 +7,7 @@
 
 import Foundation
 public enum HTTPClientResult {
-    case success(HTTPURLResponse)
+    case success(Data, HTTPURLResponse)
     case failuer(Error)
 }
 protocol HttpClient {
