@@ -8,29 +8,6 @@
 import XCTest
 import EssentialFeed
 
-class URLSessionHTTPClient {
-    private let session: URLSession
-    
-    init(session: URLSession = .shared) {
-        self.session = session
-    }
-    
-    struct Unimplemented: Error{}
-    
-    func get(from url: URL, completion: @escaping (HTTPClientResult) -> Void) {
-        session.dataTask(with: url) { data, response, error in
-            if let error = error {
-                completion(.failuer(error))
-            } else if let data = data, let response = response as? HTTPURLResponse {
-                completion(.success(data, response))
-            } else {
-                completion(.failuer(Unimplemented()))
-            }
-        }.resume()
-    }
-}
-
-
 class URLSessionHTTPClientTests: XCTestCase {
     override func setUp() {
         super.setUp()
@@ -109,7 +86,7 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     // MARK: - Helpers
-    private func makeSut(file: StaticString = #file, line: UInt = #line) -> URLSessionHTTPClient {
+    private func makeSut(file: StaticString = #file, line: UInt = #line) -> HttpClient {
         let sut = URLSessionHTTPClient()
         trackForMemoryLeaks(sut)
         return sut
@@ -155,6 +132,7 @@ class URLSessionHTTPClientTests: XCTestCase {
     }
     
     private func anyHttpURLResponse() -> HTTPURLResponse { HTTPURLResponse(url: anyURL(), statusCode: 200, httpVersion: nil, headerFields: nil)! }
+    
     private func anyData() -> Data { "Any data".data(using: .utf8)! }
     
     private class URLProtocolStub: URLProtocol {
