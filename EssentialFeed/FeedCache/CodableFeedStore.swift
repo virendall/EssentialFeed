@@ -60,7 +60,8 @@ public class CodableFeedStore: FeedStore {
     }
     
     public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-        queue.async(flags: .barrier) {[storeURL] in
+        let storeURL = storeURL
+        queue.async(flags: .barrier) {
             do {
                 let encoder = JSONEncoder()
                 let cache = Cache(feed: feed.map(CodableFeedImage.init), timestamp: timestamp)
@@ -74,13 +75,17 @@ public class CodableFeedStore: FeedStore {
     }
     
     public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-        queue.async(flags: .barrier) {[storeURL] in
+        let storeURL = storeURL
+        print("Ok Deleteion Called")
+        queue.async(flags: .barrier) {
             guard FileManager.default.fileExists(atPath: storeURL.path) else {
+                print("File not exist at path \(storeURL.path)")
                 return completion(nil)
             }
             
             do {
                 try FileManager.default.removeItem(at: storeURL)
+                print("File deleted successfully")
                 completion(nil)
             } catch {
                 completion(error)
