@@ -17,7 +17,7 @@ class EssentialFeedEndToEndTests: XCTestCase {
         trackForMemoryLeaks(client)
         trackForMemoryLeaks(loader)
         let exp = expectation(description: "Wait for result")
-        var receivedResult: LoadFeedResult?
+        var receivedResult: FeedLoader.Result?
         loader.load { result in
             receivedResult = result
             exp.fulfill()
